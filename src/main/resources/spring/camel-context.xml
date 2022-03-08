@@ -31,11 +31,9 @@
         </route>
         <route id="_route2">
             <from id="_from2" uri="direct:error"/>
-            <transform id="_transform1">
-                <simple>Error Dummy</simple>
-            </transform>
+            <convertBodyTo id="_convertBodyTo2" type="java.lang.String"/>
             <setHeader headerName="CamelHttpResponseCode" id="_setHeader1">
-                <constant>422</constant>
+                <simple>${body}</simple>
             </setHeader>
         </route>
         <!-- <route id="_route3">
