@@ -5,6 +5,9 @@
         <restConfiguration bindingMode="off" component="jetty"
             contextPath="/" host="0.0.0.0" port="9090"/>
         <rest id="rest-82871616-cbc5-4dd8-8554-1d8c03e8246f">
+            <post id="d63bd9c9-cf79-4560-bb56-f0a93f9fbe5e" uri="/error">
+                <to uri="direct:error"/>
+            </post>
             <post id="69ad8ef4-de07-4844-8a02-ac862035380f" uri="/api">
                 <to uri="direct:services"/>
             </post>
@@ -13,7 +16,7 @@
             <from id="_from1" uri="direct:services"/>
             <log id="_log1" message="Message IN : ${body}"/>
             <convertBodyTo id="_convertBodyTo1" type="java.lang.String"/>
-           <setBody id="_setBody1">
+            <setBody id="_setBody1">
                 <simple>{
   "response": {
     "requestMessage": ${body},
@@ -26,5 +29,35 @@
             </setBody>
             <log id="_log2" message="Message OUT : ${body}"/>
         </route>
+        <route id="_route2">
+            <from id="_from2" uri="direct:error"/>
+            <transform id="_transform1">
+                <simple>Error Dummy</simple>
+            </transform>
+            <setHeader headerName="CamelHttpResponseCode" id="_setHeader1">
+                <constant>422</constant>
+            </setHeader>
+        </route>
+        <!-- <route id="_route3">
+            <from id="_from3" uri="direct:createPlanApp"/>
+            
+		            Error handling for
+		            Input Parser 
+		            
+            <onException id="_onException1">
+                <exception>com.fasterxml.jackson.core.JsonParseException</exception>
+                <exception>com.fasterxml.jackson.databind.JsonMappingException</exception>
+                <exception>com.fasterxml.jackson.databind.exc.InvalidFormatException</exception>
+                <handled>
+                    <constant>true</constant>
+                </handled>
+                <transform id="_transform1">
+                    <simple>Failure when parsing input. \n${exception.getMessage}</simple>
+                </transform>
+                <setHeader headerName="CamelHttpResponseCode" id="_setHeader1">
+                    <constant>422</constant>
+                </setHeader>
+            </onException>
+        </route>-->
     </camelContext>
 </beans>
